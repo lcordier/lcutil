@@ -56,6 +56,24 @@ def ratio_black(image, rect):
     return(histogram[0] / float(pixels))
 
 
+def ratio_white(image, rect):
+    """ Return the ratio of white pixels to non-white pixels in the rectangle in the image.
+    """
+    x1, y1, x2, y2 = rect
+
+    # Normalize the rectangle.
+    x1, x2 = ((x1, x2), (x2, x1))[x1 > x2]
+    y1, y2 = ((y1, y2), (y2, y1))[y1 > y2]
+
+    slice = image.crop((x1, y1, x2, y2)).convert('1')
+    pixels = slice.size[0] * slice.size[1]
+    if pixels == 0:
+        return(1.0)
+
+    histogram = slice.histogram()
+    return(histogram[255] / float(pixels))
+
+
 def fingerprint(image, rect):
     """ Generate a "fingerprint" of the rectangle in the image.
 
