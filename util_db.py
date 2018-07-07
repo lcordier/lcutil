@@ -7,11 +7,11 @@
 def as_dicts(cursor):
     """ Return a list of dictionaries from a result-set.
     """
+    fields = [k[0] for k in cursor.description]
     result = []
     rows = cursor.fetchall()
-    keys = [k[0] for k in cursor.description]
     for row in rows:
-        result.append(dict(zip(keys, row)))
+        result.append(dict(zip(fields, row)))
 
     return(result)
 
@@ -21,11 +21,10 @@ def dict_iter(cursor):
 
         Use this function when the result-set don't fit into memory.
     """
-    keys = [k[0] for k in cursor.description]
-
+    fields = [k[0] for k in cursor.description]
     row = cursor.fetchone()
     while row:
-        yield dict(zip(keys, row))
+        yield dict(zip(fields, row))
         row = cursor.fetchone()
 
 
