@@ -319,10 +319,10 @@ def alt_trim_whitespace(image):
     """
     width, height = image.size
 
-    x1 = left_line(image, z)
-    x2 = right_line(image, z)
-    y1 = top_line(image, z)
-    y2 = bottom_line(image, z)
+    x1 = left_line(image)
+    x2 = right_line(image)
+    y1 = top_line(image)
+    y2 = bottom_line(image)
 
     # y1 = max(y1 - 10, 0)
     # y2 = min(y2 + 10, height)
