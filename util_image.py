@@ -183,6 +183,90 @@ def stitch_vertical(image1, image2, angle1=None, angle2=None, mode='RGB'):
     return(image3)
 
 
+def top_line(image):
+    """ Find the top bounding line in an image.
+    """
+    delta = 80
+    values = {}
+    width, height = image.size
+    break_ = False
+    for y in range(0, height - delta, 20):
+        for index, x in enumerate(range(0, width - delta, delta)):
+            rect = (x, y, x + delta, y + delta)
+            if ratio_black(image, rect) >= 0.05:
+                if index not in values:
+                    values[index] = y
+                    break_ = True
+                    break
+        if break_:
+            break
+
+    return(min(values.values() or [0]))
+
+
+def bottom_line(image):
+    """ Find the bottom bounding line in an image.
+    """
+    delta = 80
+    values = {}
+    width, height = image.size
+    break_ = False
+    for y in range(height, delta, -20):
+        for index, x in enumerate(range(0, width - delta, delta)):
+            rect = (x, y - delta, x + delta, y)
+            if ratio_black(image, rect) >= 0.05:
+                if index not in values:
+                    values[index] = y
+                    break_ = True
+                    break
+        if break_:
+            break
+
+    return(max(values.values() or [height]))
+
+
+def left_line(image):
+    """ Find the left bounding line in an image.
+    """
+    delta = 80
+    values = {}
+    width, height = image.size
+    break_ = False
+    for x in range(0, width - delta, 20):
+        for index, y in enumerate(range(0, height - delta, delta)):
+            rect = (x, y, x + delta, y + delta)
+            if ratio_black(image, rect) >= 0.05:
+                if index not in values:
+                    values[index] = x
+                    break_ = True
+                    break
+        if break_:
+            break
+
+    return(min(values.values() or [0]))
+
+
+def right_line(image):
+    """ Find the right bounding line in an image.
+    """
+    delta = 80
+    values = {}
+    width, height = image.size
+    break_ = False
+    for x in range(width, delta, -20):
+        for index, y in enumerate(range(0, height - delta, delta)):
+            rect = (x - delta, y, x, y + delta)
+            if ratio_black(image, rect) >= 0.05:
+                if index not in values:
+                    values[index] = x
+                    break_ = True
+                    break
+        if break_:
+            break
+
+    return(max(values.values() or [width]))
+
+
 def trim_whitespace(image):
     """ Trim whitespace around an image.
     """
@@ -220,6 +304,30 @@ def trim_whitespace(image):
     y2 = min(y2 + 10, height)
     x1 = max(x1 - 10, 0)
     x2 = min(x2 + 10, width)
+
+    image = image.crop((x1, y1, x2, y2))
+    width, height = image.size
+
+    if width > height:
+        image = image.rotate(90, expand=True)
+
+    return(image)
+
+
+def alt_trim_whitespace(image):
+    """ Alternative algorithm to trim whitespace around an image.
+    """
+    width, height = image.size
+
+    x1 = left_line(image, z)
+    x2 = right_line(image, z)
+    y1 = top_line(image, z)
+    y2 = bottom_line(image, z)
+
+    # y1 = max(y1 - 10, 0)
+    # y2 = min(y2 + 10, height)
+    # x1 = max(x1 - 10, 0)
+    # x2 = min(x2 + 10, width)
 
     image = image.crop((x1, y1, x2, y2))
     width, height = image.size
