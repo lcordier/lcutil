@@ -132,6 +132,16 @@ def rotate(image, angle, expand=0):
     return(out)
 
 
+def make_portrait(image):
+    """ Rotate landscape images by 90 degrees.
+    """
+    width, height = image.size
+    if width > height:
+        image = image.rotate(90, expand=True)
+
+    return(image)
+
+
 def scale_width(image, new_width=1600):
     """ Scale image width while keeping aspect ratio.
     """
