@@ -37,6 +37,8 @@ def valid_filename(directory, filename=None):
         fn, ext = os.path.splitext(filename)
         return fn + '({})'.format(count) + ext
 
+    return_path = filename is None
+
     # Directory is a path.
     if filename is None:
         filename = os.path.basename(directory)
@@ -48,6 +50,10 @@ def valid_filename(directory, filename=None):
         count = 1
         while test_filename(filename, count) in items:
             count += 1
+        if return_path:
+            return os.path.join(directory, test_filename(filename, count))
         return test_filename(filename, count)
     else:
+        if return_path:
+            return os.path.join(directory, filename)
         return filename
