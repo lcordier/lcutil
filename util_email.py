@@ -2,12 +2,100 @@
 
     html_email deals correctly with attachments and inline images as used by MS Exchange and Thunderbird.
 """
+import datetime
 from email.encoders import encode_base64
+from email.header import decode_header
 from email.mime.image import MIMEImage
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEBase, MIMEMultipart
-from email.utils import COMMASPACE, formatdate, make_msgid
+from email.parser import HeaderParser
+from email.utils import COMMASPACE, formatdate, make_msgid, parsedate
+import json
+import os
 import smtplib
+import tempfile
+import time
+
+from util_fs import ensure_directory_exists, valid_filename
+
+try:
+    from pyzmail import parse
+except ImportError:
+    pass
+else:
+    def strip_header(email_string):
+        """ Remove content-description/type/disposition header.
+        """
+        lines = email_string.splitlines()
+        try:
+            while lines[0].strip() != '':
+                lines.pop(0)
+        except IndexError:
+            pass
+
+        return('\n'.join(lines[1:]))
+
+
+    def extract_email_parts(email_string, dst=None, flatten=True):
+        """ Process an email, extract meta data, bodies and attachments.
+            The email can then be further processed with os.walk().
+        """
+        message = parse.email.message_from_string(email_string)
+
+        from_ = parse.get_mail_addresses(message, 'from')
+        to = parse.get_mail_addresses(message, 'to')
+
+        # NOTE: parsedate don't take timezone into account!!!
+        # https://stackoverflow.com/questions/1790795/parsing-date-with-timezone-from-an-email
+        timestamp = datetime.datetime.fromtimestamp(time.mktime(parsedate(message['Date'])))
+
+        subject = message['Subject']
+        subject = decode_header(subject)[0][0]
+
+        header_parser = HeaderParser()
+        msg = header_parser.parsestr(email_string)
+        headers = dict(msg.items())
+        message_id = headers.get('Message-ID', '<missing>')
+
+        meta = {
+            'from': from_,
+            'to': to,
+            'timestamp': timestamp.strftime('%Y%m%dT%H%M%S'),
+            'subject': subject,
+            'message_id': message_id,
+        }
+
+        parts = parse.get_mail_parts(message)
+        if dst is None:
+            dst = tempfile.mkdtemp()
+        else:
+            ensure_directory_exists(dst)
+
+        dst_filename = valid_filename(os.path.join(dst, 'meta.json'))
+        with open(dst_filename, 'wb') as f:
+            json.dump(meta, f)
+
+        for part in parts:
+            filename = part.filename
+            type_ = part.type.lower()
+
+            if type_ in ['message/rfc822']:
+                if flatten:
+                    extract_email_parts(strip_header(part.get_payload()), dst=dst, flatten=flatten)
+                else:
+                    extract_email_parts(strip_header(part.get_payload()), dst=os.path.join(dst, filename), flatten=flatten)
+
+            elif type_ in ['text/html', 'text/plain']:
+                ext = {'text/html': '.html', 'text/plain': '.txt'}[type_]
+                dst_filename = valid_filename(os.path.join(dst, 'body' + ext))
+                with open(dst_filename, 'wb') as f:
+                    f.write(part.get_payload())
+
+            elif part.disposition in ['attachment']:
+                dst_filename = valid_filename(os.path.join(dst, filename))
+                with open(dst_filename, 'wb') as f:
+                    f.write(part.get_payload())
+        return dst
 
 
 def text_email(from_='',
