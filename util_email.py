@@ -11,10 +11,14 @@ from email.mime.multipart import MIMEBase, MIMEMultipart
 from email.parser import HeaderParser
 from email.utils import COMMASPACE, formatdate, make_msgid, parsedate
 import json
+import logging
 import os
 import smtplib
 import tempfile
 import time
+
+logger = logging.getLogger(__name__)
+logger.addHandler(logging.NullHandler())
 
 from util_fs import ensure_directory_exists, valid_filename
 
@@ -36,7 +40,7 @@ else:
         return('\n'.join(lines[1:]))
 
 
-    def extract_email_parts(email_string, dst=None, flatten=True):
+    def extract_email_parts(email_string, dst=None, flatten=True, ascii=True):
         """ Process an email, extract meta data, bodies and attachments.
             The email can then be further processed with os.walk().
         """
@@ -51,6 +55,10 @@ else:
 
         subject = message['Subject']
         subject = decode_header(subject)[0][0]
+
+        if ascii:
+            subject = subject.decode('ascii', 'ignore')
+            subject = ' '.join(subject.splitlines()).strip()
 
         header_parser = HeaderParser()
         msg = header_parser.parsestr(email_string)
@@ -81,9 +89,9 @@ else:
 
             if type_ in ['message/rfc822']:
                 if flatten:
-                    extract_email_parts(strip_header(part.get_payload()), dst=dst, flatten=flatten)
+                    extract_email_parts(strip_header(part.get_payload()), dst=dst, flatten=flatten, ascii=ascii)
                 else:
-                    extract_email_parts(strip_header(part.get_payload()), dst=os.path.join(dst, filename), flatten=flatten)
+                    extract_email_parts(strip_header(part.get_payload()), dst=os.path.join(dst, filename), flatten=flatten, ascii=ascii)
 
             elif type_ in ['text/html', 'text/plain']:
                 ext = {'text/html': '.html', 'text/plain': '.txt'}[type_]
