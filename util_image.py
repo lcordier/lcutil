@@ -193,10 +193,9 @@ def stitch_vertical(image1, image2, angle1=None, angle2=None, mode='RGB'):
     return(image3)
 
 
-def top_line(image):
+def top_line(image, delta=80):
     """ Find the top bounding line in an image.
     """
-    delta = 80
     values = {}
     width, height = image.size
     break_ = False
@@ -214,10 +213,9 @@ def top_line(image):
     return(min(values.values() or [0]))
 
 
-def bottom_line(image):
+def bottom_line(image, delta=80):
     """ Find the bottom bounding line in an image.
     """
-    delta = 80
     values = {}
     width, height = image.size
     break_ = False
@@ -235,10 +233,9 @@ def bottom_line(image):
     return(max(values.values() or [height]))
 
 
-def left_line(image):
+def left_line(image, delta=80):
     """ Find the left bounding line in an image.
     """
-    delta = 80
     values = {}
     width, height = image.size
     break_ = False
@@ -256,10 +253,9 @@ def left_line(image):
     return(min(values.values() or [0]))
 
 
-def right_line(image):
+def right_line(image, delta=80):
     """ Find the right bounding line in an image.
     """
-    delta = 80
     values = {}
     width, height = image.size
     break_ = False
@@ -320,15 +316,17 @@ def trim_whitespace(image):
     return(image)
 
 
-def alt_trim_whitespace(image):
+def alt_trim_whitespace(image, delta=80):
     """ Alternative algorithm to trim whitespace around an image.
+
+        Ignore speckels in the image.
     """
     width, height = image.size
 
-    x1 = left_line(image)
-    x2 = right_line(image)
-    y1 = top_line(image)
-    y2 = bottom_line(image)
+    x1 = left_line(image, delta)
+    x2 = right_line(image, delta)
+    y1 = top_line(image, delta)
+    y2 = bottom_line(image, delta)
 
     # y1 = max(y1 - 10, 0)
     # y2 = min(y2 + 10, height)
