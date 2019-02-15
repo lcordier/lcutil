@@ -17,10 +17,10 @@ import smtplib
 import tempfile
 import time
 
+from util_fs import ensure_directory_exists, valid_filename
+
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())
-
-from util_fs import ensure_directory_exists, valid_filename
 
 try:
     from pyzmail import parse
@@ -65,6 +65,9 @@ else:
         headers = dict(msg.items())
         message_id = headers.get('Message-ID', '<missing>')
 
+        logger.info('message_id: ' + message_id)
+        logger.info('subject: ' + subject)
+
         meta = {
             'from': from_,
             'to': to,
@@ -80,6 +83,7 @@ else:
             ensure_directory_exists(dst)
 
         dst_filename = valid_filename(os.path.join(dst, 'meta.json'))
+        logger.info('meta: ' + dst_filename)
         with open(dst_filename, 'wb') as f:
             json.dump(meta, f)
 
@@ -96,11 +100,13 @@ else:
             elif type_ in ['text/html', 'text/plain']:
                 ext = {'text/html': '.html', 'text/plain': '.txt'}[type_]
                 dst_filename = valid_filename(os.path.join(dst, 'body' + ext))
+                logger.info('body: ' + dst_filename)
                 with open(dst_filename, 'wb') as f:
                     f.write(part.get_payload())
 
             elif part.disposition in ['attachment']:
-                dst_filename = valid_filename(os.path.join(dst, filename))
+                dst_filename = valid_filename(os.path.join(dst, filename), ascii=ascii)
+                logger.info('attachment: ' + dst_filename)
                 with open(dst_filename, 'wb') as f:
                     f.write(part.get_payload())
         return dst
