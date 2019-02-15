@@ -2,7 +2,7 @@
 """
 import os
 
-import unidecode
+from unidecode import unidecode
 
 
 def ensure_directory_exists(path, expand_user=True, file=False):
