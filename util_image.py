@@ -316,10 +316,6 @@ def trim_whitespace(image):
     x2 = min(x2 + 10, width)
 
     image = image.crop((x1, y1, x2, y2))
-    width, height = image.size
-
-    if width > height:
-        image = image.rotate(90, expand=True)
 
     return(image)
 
@@ -340,10 +336,6 @@ def alt_trim_whitespace(image):
     # x2 = min(x2 + 10, width)
 
     image = image.crop((x1, y1, x2, y2))
-    width, height = image.size
-
-    if width > height:
-        image = image.rotate(90, expand=True)
 
     return(image)
 
@@ -357,3 +349,13 @@ def crop(path):
     width, height = image.size
     if width > 50 and height > 50:
         image.save(path)
+
+
+def upright(image):
+    """ Turn image upright, portrait.
+    """
+    width, height = image.size
+    if width > height:
+        image = image.rotate(90, expand=True)
+
+    return(image)
