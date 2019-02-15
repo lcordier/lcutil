@@ -28,7 +28,7 @@ def ensure_directory_exists(path, expand_user=True, file=False):
     return(path)
 
 
-def valid_filename(directory, filename=None, ascii=True):
+def valid_filename(directory, filename=None, ascii=False):
     """ Return a valid "new" filename in a directory, given a filename/directory=path to test.
 
         Deal with duplicate filenames.
