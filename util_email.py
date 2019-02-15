@@ -310,7 +310,4 @@ if __name__ == '__main__':
         }
     })
 
-    # formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-
-    email_string = sys.stdin.read()
-    extract_email_parts(email_string)
+    extract_email_parts(sys.stdin.read())

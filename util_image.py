@@ -1,7 +1,6 @@
 """ Utility library for image-processing tools.
 """
 import math
-import os
 
 from PIL import Image, ImageDraw
 

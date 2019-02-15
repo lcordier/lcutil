@@ -4,6 +4,7 @@
     https://www.python.org/dev/peps/pep-0249/
 """
 
+
 def as_dicts(cursor):
     """ Return a list of dictionaries from a result-set.
     """
