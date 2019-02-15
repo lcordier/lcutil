@@ -8,7 +8,6 @@
       * options.username
       * options.password
 """
-import datetime
 import email
 import email.utils
 from email.header import decode_header
@@ -19,8 +18,6 @@ import sys
 
 import imapclient
 from pyzmail import parse
-
-import util
 
 
 def ensure_directory_exists(path, expand_user=True, file=False):
@@ -39,7 +36,7 @@ def ensure_directory_exists(path, expand_user=True, file=False):
     if not os.path.exists(directory) and directory:
         try:
             os.makedirs(directory)
-        except OSError, e:
+        except OSError as e:
             # A parallel process created the directory after the existance check.
             pass
 
@@ -60,12 +57,12 @@ def process_email(email_string):
     message = parse.email.message_from_string(email_string)
     try:
         from_name = parse.get_mail_addresses(message, 'from')[0][0]
-    except:
+    except IndexError:
         from_name = 'none'
 
     try:
         from_address = parse.get_mail_addresses(message, 'from')[0][1]
-    except:
+    except IndexError:
         from_address = 'none'
 
     header_parser = email.parser.HeaderParser()
