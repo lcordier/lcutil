@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 """ Functiuons for sending emails.
 
     html_email deals correctly with attachments and inline images as used by MS Exchange and Thunderbird.
@@ -12,8 +14,10 @@ from email.parser import HeaderParser
 from email.utils import COMMASPACE, formatdate, make_msgid, parsedate
 import json
 import logging
+import logging.config
 import os
 import smtplib
+import sys
 import tempfile
 import time
 
@@ -276,3 +280,37 @@ def html_email(from_='',
         to += bcc
     smtp.sendmail(from_, to, message.as_string())
     smtp.quit()
+
+
+if __name__ == '__main__':
+
+    logging.config.dictConfig({
+        'version': 1,
+        'disable_existing_loggers': False,
+        'handlers': {
+            'console': {
+                'class': 'logging.StreamHandler',
+                'level': 'INFO',
+                'formatter': 'detailed',
+                'stream': 'ext://sys.stdout',
+            }
+        },
+        'formatters': {
+            'detailed': {
+                'format': '%(asctime)s %(module)-17s line:%(lineno)-4d %(levelname)-8s %(message)s',
+                'datefmt': '%Y-%m-%d %H:%M:%S'
+            },
+        },
+        'loggers': {
+            '': {  # root logger
+                'handlers': ['console'],
+                'level': 'INFO',
+                'propagate': True,
+            }
+        }
+    })
+
+    # formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
+    email_string = sys.stdin.read()
+    extract_email_parts(email_string)
