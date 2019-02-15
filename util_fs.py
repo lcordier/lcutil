@@ -2,6 +2,8 @@
 """
 import os
 
+import unidecode
+
 
 def ensure_directory_exists(path, expand_user=True, file=False):
     """ Create a directory if it doesn't exists.
@@ -26,7 +28,7 @@ def ensure_directory_exists(path, expand_user=True, file=False):
     return(path)
 
 
-def valid_filename(directory, filename=None):
+def valid_filename(directory, filename=None, ascii=True):
     """ Return a valid "new" filename in a directory, given a filename/directory=path to test.
 
         Deal with duplicate filenames.
@@ -43,6 +45,11 @@ def valid_filename(directory, filename=None):
     if filename is None:
         filename = os.path.basename(directory)
         directory = os.path.dirname(directory)
+
+    if ascii:
+        filename = unidecode(unicode(filename))
+        filename = ' '.join(filename.splitlines()).strip()
+        filename = filename.decode('ascii', 'ignore')
 
     # Allow for directories.
     items = {item: True for item in os.listdir(directory)}
