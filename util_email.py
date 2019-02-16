@@ -101,7 +101,7 @@ else:
                 else:
                     extract_email_parts(strip_header(part.get_payload()), dst=os.path.join(dst, filename), flatten=flatten, ascii=ascii)
 
-            elif type_ in ['text/html', 'text/plain']:
+            elif type_ in ['text/html', 'text/plain'] and part.disposition not in ['attachment']:
                 ext = {'text/html': '.html', 'text/plain': '.txt'}[type_]
                 dst_filename = valid_filename(os.path.join(dst, 'body' + ext))
                 logger.info('body: ' + dst_filename)
@@ -310,4 +310,5 @@ if __name__ == '__main__':
         }
     })
 
-    extract_email_parts(sys.stdin.read())
+    ascii = len(sys.argv) > 1 and sys.argv[1].lower() == 'ascii'
+    extract_email_parts(sys.stdin.read(), ascii=ascii)
