@@ -15,6 +15,7 @@ from email.utils import COMMASPACE, formatdate, make_msgid, parsedate
 import json
 import logging
 import logging.config
+import mimetypes
 import os
 import smtplib
 import sys
@@ -25,6 +26,8 @@ from util_fs import ensure_directory_exists, valid_filename
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())
+
+mimetypes.init()
 
 try:
     from pyzmail import parse
@@ -142,6 +145,7 @@ def text_email(from_='',
 
     if files:
         for filepath in files:
+            # Use mimetypes here as well.
             part = MIMEBase('application', 'octet-stream')
             part.set_payload(open(filepath, 'rb').read())
             encode_base64(part)
@@ -259,10 +263,13 @@ def html_email(from_='',
 
     if files:
         for attachment in files:
-            # We need mimetypes here, only deal with PDFs at the moment.
-            part = MIMEBase('application', 'pdf')  # 'octet-stream' filtered by MS Exchange.
+            part = MIMEBase('application', 'octet-stream')  # 'octet-stream' filtered by MS Exchange.
             with open(attachment, 'rb') as attachment_file:
                 attachment_data = attachment_file.read()
+
+            mime_type = mimetypes.guess_type(attachment)[0]
+            if mime_type:
+                part.set_type(mime_type)
 
             part.set_payload(attachment_data)
             encode_base64(part)
