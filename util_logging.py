@@ -162,5 +162,9 @@ if __name__ == '__main__':
     except ValueError as e:
         logger_C.exception('C: Exception message.')
 
-    from logging_tree import printout
-    printout()
+    try:
+        from logging_tree import printout
+    except ImportError:
+        print('Install logging_tree for a pretty visualization of your loggin tree.')
+    else:
+        printout()
