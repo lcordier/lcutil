@@ -1,16 +1,16 @@
-# util_ftp
-paramiko
-ftputil
+# util_email
+imapclient
+pyzmail
 
 # util_fs
 unidecode
 
-# util_email
-pyzmail
-imapclient
-
-# util_logging
-logging_tree
+# util_ftp
+ftputil
+paramiko
 
 # util_image
 pillow
+
+# util_logging
+logging_tree
