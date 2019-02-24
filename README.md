@@ -27,7 +27,7 @@ logging_tree
 If you only need one module it is recommended you install from source and manage the requirments yourself.
 
 
-## Exampl usage:
+## Example usage:
 
 ```python
 from PIL import Image
