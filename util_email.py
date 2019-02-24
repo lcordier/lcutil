@@ -145,8 +145,11 @@ def text_email(from_='',
 
     if files:
         for filepath in files:
-            # Use mimetypes here as well.
             part = MIMEBase('application', 'octet-stream')
+            mime_type = mimetypes.guess_type(filepath)[0]
+            if mime_type:
+                part.set_type(mime_type)
+
             part.set_payload(open(filepath, 'rb').read())
             encode_base64(part)
             part.add_header('Content-Disposition', 'attachment; filename="%s"' % os.path.basename(filepath))
@@ -250,9 +253,9 @@ def html_email(from_='',
             image_part = MIMEImage(image[1])
             image_filename = image[0]
 
-        # mime_type = mimetypes.guess_type(image_filename)[0]
-        # if mime_type:
-        #     image_part.set_type(mime_type)
+        mime_type = mimetypes.guess_type(image_filename)[0]
+        if mime_type:
+            image_part.set_type(mime_type)
 
         image_part.add_header('Content-Location', image_filename)
         image_part.add_header('Content-Disposition', 'inline', filename=image_filename)
