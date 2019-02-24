@@ -30,7 +30,6 @@ If you only need one module it is recommended you install from source and manage
 ## Exampl usage:
 
 ```python
-
 from PIL import Image
 
 from lcutil import util_email as ue
