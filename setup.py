@@ -8,9 +8,10 @@ def readme():
 
 # https://pypi.org/pypi?%3Aaction=list_classifiers
 setup(name='lcutil',
-      version='0.1',
+      version='0.2.2',
       description='General useful utility functions for Python projects.',
       long_description=readme(),
+      long_description_content_type='text/markdown',
       classifiers=[
           'Development Status :: 4 - Beta',
           'Intended Audience :: Developers',
