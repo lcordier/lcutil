@@ -77,8 +77,7 @@ def process_email(email_string):
     return({'from': from_, 'subject': subject, 'message_id': message_id})
 
 
-if __name__ == '__main__':
-
+def main():
     parser = optparse.OptionParser()
 
     parser.add_option('-c',
@@ -261,3 +260,7 @@ if __name__ == '__main__':
                 maildir.close()
 
             server.close_folder()
+
+
+if __name__ == '__main__':
+    main()

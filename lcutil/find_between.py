@@ -12,8 +12,7 @@ import sys
 FORMAT = '%Y%m%d'
 
 
-if __name__ == '__main__':
-
+def main():
     parser = optparse.OptionParser()
 
     parser.add_option('-r',
@@ -22,7 +21,7 @@ if __name__ == '__main__':
                       action='store',
                       type='string',
                       default='.',
-                      help='root directory to walk')
+                      help='root directory to walk [.]')
 
     parser.add_option('-b',
                       '--start',
@@ -38,7 +37,7 @@ if __name__ == '__main__':
                       action='store',
                       type='string',
                       default='',
-                      help='stop date [YYYYMMDD]')
+                      help='stop date [YYYYMMDD] [next day]')
 
     options, args = parser.parse_args()
 
@@ -69,3 +68,7 @@ if __name__ == '__main__':
 
                 if start < mtime < stop:
                     print(mtime.strftime('%Y%m%dT%H%M%S'), path)
+
+
+if __name__ == '__main__':
+    main()
