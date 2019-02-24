@@ -1,37 +1,25 @@
-## Welcome to GitHub Pages
+# General useful utility functions for Python projects.
 
-You can use the [editor on GitHub](https://github.com/lcordier/util/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
+These are functions I use every day. Ideally they should make their way into the standard library.
+I understand we cannot put everything in the standard library, hence this package. ;)
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+The various modules have the following requirements:
 
-### Markdown
+## util_email
+imapclient
+pyzmail
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+## util_fs
+unidecode
 
-```markdown
-Syntax highlighted code block
+## util_ftp
+ftputil
+paramiko
 
-# Header 1
-## Header 2
-### Header 3
+## util_image
+pillow
 
-- Bulleted
-- List
+## util_logging
+logging_tree
 
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/lcordier/util/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+If you only need one module it is recommended you install from source and manage the requirments yourself.
