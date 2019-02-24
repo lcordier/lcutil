@@ -1,0 +1,16 @@
+# util_ftp
+paramiko
+ftputil
+
+# util_fs
+unidecode
+
+# util_email
+pyzmail
+imapclient
+
+# util_logging
+logging_tree
+
+# util_image
+pillow
