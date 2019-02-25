@@ -22,6 +22,8 @@ import sys
 import tempfile
 import time
 
+from unidecode import unidecode
+
 from util_fs import ensure_directory_exists, valid_filename
 
 logger = logging.getLogger(__name__)
@@ -61,11 +63,12 @@ else:
         timestamp = datetime.datetime.fromtimestamp(time.mktime(parsedate(message['Date'])))
 
         subject = message['Subject']
-        subject = decode_header(subject)[0][0]
+        subject = ' '.join(part for part, encoding in decode_header(subject))
 
         if ascii:
-            subject = subject.decode('ascii', 'ignore')
+            subject = unidecode(subject.decode('utf8'))
             subject = ' '.join(subject.splitlines()).strip()
+            # subject = subject.decode('ascii', 'ignore')
 
         header_parser = HeaderParser()
         msg = header_parser.parsestr(email_string)
@@ -111,11 +114,16 @@ else:
                 with open(dst_filename, 'wb') as f:
                     f.write(part.get_payload())
 
-            elif part.disposition in ['attachment']:
-                dst_filename = valid_filename(os.path.join(dst, filename), ascii=ascii)
+            elif part.disposition in ['attachment'] or any([type_.startswith(prefix) for prefix in ['application', 'image']]):
+                ext = mimetypes.guess_extension(part.type or '')
+                dst_filename = valid_filename(os.path.join(dst, filename or 'noname' + ext), ascii=ascii)
                 logger.info('attachment: ' + dst_filename)
                 with open(dst_filename, 'wb') as f:
                     f.write(part.get_payload())
+
+            else:
+                logger.debug('Unknown type: filename: {}, disposition: {}, type: {}'.format(part.filename, part.disposition, part.type))
+
         return dst
 
 
@@ -300,7 +308,7 @@ if __name__ == '__main__':
         'handlers': {
             'console': {
                 'class': 'logging.StreamHandler',
-                'level': 'INFO',
+                'level': 'DEBUG',
                 'formatter': 'detailed',
                 'stream': 'ext://sys.stdout',
             }
