@@ -40,6 +40,7 @@ setup(name='lcutil',
           'console_scripts': [
               'find_between=lcutil.find_between:main',
               'imap_tool=lcutil.imap_tool:main',
+              'send_email=lcutil.send_email:main',
           ],
       },
       include_package_data=True,

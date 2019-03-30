@@ -77,8 +77,7 @@ def text_email(from_='',
     smtp.quit()
 
 
-if __name__ == '__main__':
-
+def main():
     path = os.path.expanduser('~/netrc.json')
     if not os.path.exists(path):
         print('Missing file: {}'.format(path))
@@ -138,3 +137,8 @@ if __name__ == '__main__':
         smtp_password=netrc.get(label, {}).get('password', ''),
         files=args
     )
+
+
+if __name__ == '__main__':
+    main()
+
