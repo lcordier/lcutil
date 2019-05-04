@@ -1,6 +1,7 @@
 """ Various filesystem utilities.
 """
 import os
+import hashlib
 
 from unidecode import unidecode
 
@@ -64,3 +65,12 @@ def valid_filename(directory, filename=None, ascii=False):
         if return_path:
             return os.path.join(directory, filename)
         return filename
+
+
+def checksum(path, hash_func='md5'):
+    """ Perform a hash checksum of a file.
+    """
+    hash = getattr(hashlib, hash_func)()
+    with open(path, 'rb') as f:
+        hash.update(f.read())
+    return(hash.hexdigest())
