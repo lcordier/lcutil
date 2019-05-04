@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
 """ Use pre-defined defaults to open a file.
+
+    alias s='showfile.py'
 """
 import optparse
 import mimetypes
