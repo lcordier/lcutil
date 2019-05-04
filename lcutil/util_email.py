@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-""" Functiuons for sending emails.
+""" Functions for sending emails.
 
     html_email deals correctly with attachments and inline images as used by MS Exchange and Thunderbird.
 """
