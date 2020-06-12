@@ -140,7 +140,7 @@ def main():
     valid_commands = ['ls', 'cp', 'mv', 'mkdir', 'rmdir', 'dump']
 
     if command not in valid_commands:
-        print('Unknown commad: {}.'.format(command))
+        print('Unknown command: {}.'.format(command))
         print('Valid commands: {}.'.format(', '.join(valid_commands)))
         print('')
         parser.print_help()
