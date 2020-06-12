@@ -20,11 +20,11 @@ ROOT = os.path.dirname(os.path.abspath(__file__))
 EXT_COMMAND = {
     ('jpg', 'jpeg', 'png', 'gif'): 'eog {f}',
     ('epub', 'mobi'): 'fbreader {f}',
-    ('pdf',): 'evince {f}',
+    ('pdf', 'djvu'): 'evince {f}',
     ('md',): 'vim {f} && md2pdf --output /tmp/tmpmd2pdf.pdf {f} && evince /tmp/tmpmd2pdf.pdf',
     ('py', 'txt'): 'vim {f}',
     ('csv', 'xls', 'xlsx', 'doc', 'docx', 'ods', 'odt'): 'libreoffice {f}',
-    ('mp3', 'mp4', 'avi', 'mkv'): 'mplayer {f}',
+    ('mp3', 'mp4', 'avi', 'mkv', 'flv'): 'mplayer {f}',
     ('htm', 'html'): 'firefox {f}',
     ('json', 'diff'): 'komodo {f}',
 }
@@ -79,10 +79,14 @@ def main():
         base, ext = os.path.splitext(filepath)
         command = find_command(ext)
 
-        if command == NOT_FOUND:
-            mime = magic.Magic(mime=True)
-            ext = mimetypes.guess_extension(mime.from_file(filepath))
-            command = find_command(ext)
+        try:
+            if command == NOT_FOUND:
+                mime = magic.Magic(mime=True)
+                ext = mimetypes.guess_extension(mime.from_file(filepath))
+                command = find_command(ext)
+        except FileNotFoundError:
+            print('File not found. {}'.format(filepath))
+            continue
 
         if options.quiet:
             command += '>/dev/null'
