@@ -1,4 +1,8 @@
 *.pyc
+*.eml
+
+# pyenv file
+.python-version
 
 # Setuptools distribution folder.
 /dist/
@@ -10,4 +14,5 @@
 
 # Virtualenv folder.
 /venv/
+/venv3/
 
