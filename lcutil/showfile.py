@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3`
 
 """ Use pre-defined defaults to open a file.
 """
@@ -10,7 +10,6 @@ from shlex import quote
 import subprocess
 import sys
 
-# pip3 install python-magic
 import magic
 
 

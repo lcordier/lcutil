@@ -1,9 +1,9 @@
 # util_email
 imapclient
-pyzmail
+pyzmail36
 
 # util_fs
-unidecode
+text-unidecode
 
 # util_ftp
 ftputil
@@ -14,3 +14,6 @@ pillow
 
 # util_logging
 logging_tree
+
+# showfile
+python-magic
