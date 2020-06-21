@@ -80,6 +80,7 @@ netrc.save()
     }
 }
 """
+```
 
 Then we can use the secret credentials stored in ~/netrc.json.
 
