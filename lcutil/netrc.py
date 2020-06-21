@@ -17,6 +17,7 @@
 """
 import json
 import os
+import stat
 
 
 class AttrDict(dict):
@@ -54,3 +55,5 @@ class Netrc(AttrDict):
         with open(self.__path, 'w') as f:
             self.__netrc[self.__section] = d
             json.dump(self.__netrc, f, indent=4)
+
+        os.chmod(self.__path, stat.S_IRUSR | stat.S_IWUSR)
