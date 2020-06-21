@@ -2,7 +2,7 @@
 
 """ CLI utility to send emails.
 
-    Example netrc.json:
+    Example netrc.json file:
     {
         "smtp" : {
             "host": "mail.example.com",
@@ -26,6 +26,8 @@ import optparse
 import os
 import smtplib
 import sys
+
+from lcutil.netrc import Netrc
 
 
 def text_email(from_='',
@@ -83,8 +85,6 @@ def main():
         print('Missing file: {}'.format(path))
         sys.exit()
 
-    netrc = json.load(open(path, 'r'))
-
     parser = optparse.OptionParser()
 
     parser.add_option('-l',
@@ -93,7 +93,7 @@ def main():
                       action='store',
                       type='string',
                       default='smtp',
-                      help='netrc.json label [smtp]')
+                      help='netrc.json section [smtp]')
 
     parser.add_option('-s',
                       '--subject',
@@ -116,29 +116,29 @@ def main():
                       dest='to',
                       action='store',
                       type='string',
-                      default='lcordier@gmail.com',
+                      default='',
                       help='to addresses')
 
     options, args = parser.parse_args()
 
     label = options.label
-    to = [address.strip() for address in (options.to or netrc.get(label, {}).get('to', '')).split(',')]
+    netrc = Netrc(path='~/netrc.json', section=label)
+    to = [address.strip() for address in (options.to or netrc.to).split(',')]
     subject = options.subject
     body = options.body
 
     text_email(
-        from_=netrc.get(label, {}).get('from', ''),
+        from_=netrc['from'],  # reserved word
         to=to,
         subject=subject,
         body=body,
-        smtp_server=netrc.get(label, {}).get('host', ''),
-        smtp_port=netrc.get(label, {}).get('port', ''),
-        smtp_username=netrc.get(label, {}).get('username', ''),
-        smtp_password=netrc.get(label, {}).get('password', ''),
+        smtp_server=netrc.host,
+        smtp_port=netrc.port,
+        smtp_username=netrc.username,
+        smtp_password=netrc.password,
         files=args
     )
 
 
 if __name__ == '__main__':
     main()
-
