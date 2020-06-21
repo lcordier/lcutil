@@ -3,7 +3,7 @@
 import os
 import hashlib
 
-from unidecode import unidecode
+from text_unidecode import unidecode
 
 
 def ensure_directory_exists(path, expand_user=True, file=False):

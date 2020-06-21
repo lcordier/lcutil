@@ -22,9 +22,9 @@ import sys
 import tempfile
 import time
 
-from unidecode import unidecode
+from text_unidecode import unidecode
 
-from util_fs import ensure_directory_exists, valid_filename
+from .util_fs import ensure_directory_exists, valid_filename
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())
