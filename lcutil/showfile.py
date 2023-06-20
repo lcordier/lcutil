@@ -1,6 +1,9 @@
 #!/usr/bin/env python3`
 
 """ Use pre-defined defaults to open a file.
+
+    See also:
+      xdg-open
 """
 import optparse
 import mimetypes
@@ -17,15 +20,16 @@ ROOT = os.path.dirname(os.path.abspath(__file__))
 
 # Map a file extension (lowercase, tuple) to a command.
 EXT_COMMAND = {
-    ('jpg', 'jpeg', 'png', 'gif'): 'eog {f}',
+    ('jpg', 'jpeg', 'png', 'gif'): 'sxiv {f}',
+    ('webp',): 'display {f}',
     ('epub', 'mobi'): 'fbreader {f}',
-    ('pdf', 'djvu'): 'evince {f}',
+    ('pdf',): 'zathura {f}',
+    ('djvu',): 'evince {f}',
     ('md',): 'vim {f} && md2pdf --output /tmp/tmpmd2pdf.pdf {f} && evince /tmp/tmpmd2pdf.pdf',
-    ('py', 'txt'): 'vim {f}',
+    ('py', 'txt', 'json', 'diff'): 'vim {f}',
     ('csv', 'xls', 'xlsx', 'doc', 'docx', 'ods', 'odt'): 'libreoffice {f}',
-    ('mp3', 'mp4', 'avi', 'mkv', 'flv'): 'mplayer {f}',
+    ('mp3', 'm4a', 'wav', 'flac', 'mp4', 'avi', 'mkv', 'flv', 'mov', 'webm'): 'mpv {f}',
     ('htm', 'html'): 'firefox {f}',
-    ('json', 'diff'): 'komodo {f}',
 }
 
 NOT_FOUND = 'echo viewer not configured for {f}'
@@ -38,7 +42,7 @@ def known_extensions():
     for exts in EXT_COMMAND:
         extensions.extend(exts)
 
-    return(extensions)
+    return extensions
 
 
 def find_command(ext):
