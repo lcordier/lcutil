@@ -73,7 +73,7 @@ else:
         header_parser = HeaderParser()
         msg = header_parser.parsestr(email_string)
         headers = dict(msg.items())
-        message_id = headers.get('Message-ID', '<missing>')
+        message_id = headers.get('Message-ID', '<missing>').strip()
 
         logger.info('message_id: ' + message_id)
         logger.info('subject: ' + subject)
@@ -94,7 +94,7 @@ else:
 
         dst_filename = valid_filename(os.path.join(dst, 'meta.json'))
         logger.info('meta: ' + dst_filename)
-        with open(dst_filename, 'wb') as f:
+        with open(dst_filename, 'w') as f:
             json.dump(meta, f)
 
         for part in parts:
