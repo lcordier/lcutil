@@ -3,6 +3,7 @@
 """ Common password/passphrase functions.
 """
 import hashlib
+import os
 import random
 
 
@@ -11,7 +12,8 @@ ALPHA_UPPER = ALPHA_LOWER.upper()
 NUMERIC = '0123456789'
 SPECIAL = '!@#$%^&*()-_=+{}[]|/.,<>'  # We ignore \'"
 
-WORDS = [word.strip() for word in open('wordlist.txt', 'r').readlines() if word.strip()]
+ROOT = os.path.dirname(os.path.abspath(__file__))
+WORDS = [word.strip() for word in open(os.path.join(ROOT, 'wordlist.txt'), 'r').readlines() if word.strip()]
 
 
 def generate_password(n=8, recipe=[6, 0, 1, 1], charsets=[ALPHA_LOWER, ALPHA_UPPER, NUMERIC, SPECIAL]):
@@ -47,7 +49,7 @@ def generate_memorable_password(n=6, words=WORDS):
     return ''.join(source[idx:idx + n + 2])
 
 
-def generate_passphrase(n=3, recipe=[5, 4, 5], mode=1, words=WORDS):
+def generate_passphrase(n=3, recipe=[6, 5, 4], mode=1, words=WORDS):
     """ Create a passphrase that is more memorable.
 
         A passphrase is a sentencelike string of words used for authentication that
@@ -62,9 +64,9 @@ def generate_passphrase(n=3, recipe=[5, 4, 5], mode=1, words=WORDS):
 
     rand.shuffle(ingredients)
 
-    # TitleCaseWords + digit.
+    # TitleCaseWords + 2 digits.
     if mode in [1]:
-        return ''.join([ingredient.title() for ingredient in ingredients] + rand.choices(NUMERIC, k=1))
+        return ''.join([ingredient.title() for ingredient in ingredients] + rand.choices(NUMERIC, k=2))
 
     # raNdom caPitaliZation.
     if mode in [2]:
@@ -84,5 +86,8 @@ def generate_passphrase(n=3, recipe=[5, 4, 5], mode=1, words=WORDS):
 
 
 if __name__ == '__main__':
-    print(generate_passphrase(mode=3))
+
+    for i in range(10):
+        print(generate_passphrase(mode=1))
+
 
