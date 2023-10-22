@@ -14,6 +14,8 @@ pillow
 
 # util_logging
 logging_tree
+colorlog
 
 # showfile
 python-magic
+
