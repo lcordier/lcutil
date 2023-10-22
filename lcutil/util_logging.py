@@ -2,12 +2,36 @@
 
 """ Example dictConfig file.
 
+    https://github.com/borntyping/python-colorlog
+
     https://stackoverflow.com/questions/7507825/where-is-a-complete-example-of-logging-config-dictconfig
     https://stackoverflow.com/questions/6729268/log-messages-appearing-twice-with-python-logging
+    https://stackoverflow.com/questions/384076/how-can-i-color-python-logging-output
+    https://stackoverflow.com/questions/33170207/how-to-reconfigure-a-logger-formatter-when-using-dictconfig
 """
 import logging
 import logging.config
 import os
+
+from colorlog import ColoredFormatter
+
+
+class CustomColoredFormatter(ColoredFormatter):
+    """ Customize a colored formatter.
+
+        The following escape codes are made available for use in the format string:
+
+        {color}, fg_{color}, bg_{color}: Foreground and background colors.
+        bold, bold_{color}, fg_bold_{color}, bg_bold_{color}: Bold/bright colors.
+        thin, thin_{color}, fg_thin_{color}: Thin colors (terminal dependent).
+        reset: Clear all formatting (both foreground and background colors).
+
+        The available color names are black, red, green, yellow, blue, purple, cyan and white.
+    """
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.log_colors['CRITICAL'] = 'fg_bold_white,bg_bold_red'
+        self.log_colors['DEBUG'] = 'fg_bold_purple'
 
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
@@ -19,13 +43,13 @@ LOGGING_CONFIG = {
         'console': {
             'class': 'logging.StreamHandler',
             'level': 'INFO',
-            'formatter': 'detailed',
+            'formatter': 'color',
             'stream': 'ext://sys.stdout',
         },
         'console_debug': {
             'class': 'logging.StreamHandler',
             'level': 'DEBUG',
-            'formatter': 'summary',
+            'formatter': 'color',  # 'summary'
             'stream': 'ext://sys.stdout',
         },
         'null': {
@@ -62,6 +86,12 @@ LOGGING_CONFIG = {
     'formatters': {
         'detailed': {
             'format': '%(asctime)s %(module)-17s line:%(lineno)-4d %(levelname)-8s %(message)s',
+            'datefmt': '%Y-%m-%d %H:%M:%S'
+        },
+        'color': {
+            '()': CustomColoredFormatter,
+            #'format': "[%(log_color)s%(levelname)-8s%(reset)s] %(blue)s%(message)s",
+            'format': '%(asctime)s %(yellow)s%(module)-17s %(cyan)s line:%(lineno)-4d %(log_color)s%(levelname)-8s%(reset)s %(message)s',
             'datefmt': '%Y-%m-%d %H:%M:%S'
         },
         'summary': {
@@ -168,3 +198,4 @@ if __name__ == '__main__':
         print('Install logging_tree for a pretty visualization of your loggin tree.')
     else:
         printout()
+
