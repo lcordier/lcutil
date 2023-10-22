@@ -50,15 +50,16 @@ https://www.kaggle.com/datasets/taranvee/bruteforce-database-password-dictionari
 import hashlib
 import os
 import random
+import string
 
 
-ALPHA_LOWER = 'abcdefghijklmnopqrstuvwxyz'
-ALPHA_UPPER = ALPHA_LOWER.upper()
-NUMERIC = '0123456789'
-SPECIAL = '!@#$%^&*()-_=+{}[]|/.,<>'  # We ignore \'"
+ALPHA_LOWER = string.ascii_lowercase  # 'abcdefghijklmnopqrstuvwxyz'
+ALPHA_UPPER = string.ascii_uppercase  # ALPHA_LOWER.upper()
+NUMERIC = string.digits  # '0123456789'
+SPECIAL = string.punctuation  # '!@#$%^&*()-_=+{}[]|/.,<>'  # We ignore \'"
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
-WORDS = [word.strip() for word in open(os.path.join(ROOT, 'wordlist.txt'), 'r').readlines() if word.strip()]
+WORDS = [word.strip() for word in open(os.path.join(ROOT, 'wordlists', 'wordlist.txt'), 'r').readlines() if word.strip()]
 
 
 def generate_password(n=8, recipe=[6, 0, 1, 1], charsets=[ALPHA_LOWER, ALPHA_UPPER, NUMERIC, SPECIAL]):
@@ -133,6 +134,6 @@ def generate_passphrase(n=3, recipe=[6, 5, 4], mode=1, words=WORDS):
 if __name__ == '__main__':
 
     for i in range(10):
-        print(generate_passphrase(mode=1))
+        print(generate_passphrase(mode=2))
 
 
